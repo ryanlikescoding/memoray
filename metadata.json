@@ -1,0 +1,5 @@
+{
+  "name": "Memoray",
+  "description": "An AI-powered study partner that helps students create smart timetables, track performance, and generate personalized revision lists using Google Gemini.",
+  "requestFramePermissions": []
+}
