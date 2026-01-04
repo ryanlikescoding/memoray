@@ -1,6 +1,26 @@
 const { Plus, List, Zap, Clock, CheckCircle2, AlertTriangle, Lightbulb } = lucideReact;
+const { useState, useEffect } = React;
 
 const Dashboard = () => {
+  const [userName, setUserName] = useState(() => {
+    const stored = localStorage.getItem('userName');
+    return stored ? stored.split(' ')[0] : 'User';
+  });
+  
+  useEffect(() => {
+    const updateName = () => {
+      const stored = localStorage.getItem('userName');
+      if (stored) {
+        setUserName(stored.split(' ')[0]);
+      }
+    };
+
+    updateName();
+    // Also listen for storage events in case it changes in another tab
+    window.addEventListener('storage', updateName);
+    return () => window.removeEventListener('storage', updateName);
+  }, []);
+
   const schedule = [
     { time: "09:00 - 10:30", subject: "Calculus II", location: "Room 301", status: "Upcoming", color: "blue" },
     { time: "11:00 - 12:30", subject: "Physics I", location: "Lab B", status: "Upcoming", color: "purple" },
@@ -19,7 +39,7 @@ const Dashboard = () => {
   return (
     <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, Alex!</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, {userName}!</h1>
         <p className="text-gray-500 dark:text-gray-400">Here's a summary of your academic progress.</p>
       </div>
 

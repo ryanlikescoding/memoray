@@ -26,14 +26,14 @@ const LandingPage = () => {
                   <a className="text-gray-800 dark:text-gray-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">About</a>
                 </div>
                 <div className="flex gap-2">
-                  <button 
-                    onClick={handleLogin}
+                  <a 
+                    href="/login.html"
                     className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                     <span className="truncate">Log In</span>
-                  </button>
-                  <button onClick={handleLogin} className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
+                  </a>
+                  <a href="/register.html" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
                     <span className="truncate">Sign Up</span>
-                  </button>
+                  </a>
                 </div>
               </div>
               <div className="md:hidden">
@@ -55,9 +55,9 @@ const LandingPage = () => {
                         Effortlessly create smart timetables, track your progress, and conquer your exams with personalized revision lists. Memoray organizes your studies, so you can focus on learning.
                       </h2>
                     </div>
-                    <button onClick={handleLogin} className="flex w-full sm:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
+                    <a href="/register.html" className="flex w-full sm:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
                       <span className="truncate">Get Started for Free</span>
-                    </button>
+                    </a>
                   </div>
                   <div className="w-full lg:w-1/2">
                     <div className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl shadow-2xl" 

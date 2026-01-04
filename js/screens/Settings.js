@@ -1,9 +1,21 @@
 const { LogOut, Eye, CheckCircle2 } = lucideReact;
+const { useState } = React;
 
 const Settings = () => {
+  const [name, setName] = useState(localStorage.getItem('userName') || 'Alex Johnson');
+  const [email, setEmail] = useState(localStorage.getItem('userEmail') || 'alex@example.com');
+
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('accessToken');
     window.location.href = '/';
+  };
+
+  const handleSaveChanges = () => {
+    localStorage.setItem('userName', name);
+    localStorage.setItem('userEmail', email);
+    alert('Changes saved successfully!');
+    // Trigger a re-render or redirect if needed, but alert is fine for now
   };
 
   return (
@@ -21,12 +33,22 @@ const Settings = () => {
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Account Management</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
-                    <input type="text" defaultValue="alex_johnson" className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 dark:text-white" />
+                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                    <input 
+                      type="text" 
+                      value={name} 
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 dark:text-white" 
+                    />
                 </div>
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                    <input type="email" defaultValue="alex.j@school.edu" className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 dark:text-white" />
+                    <input 
+                      type="email" 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 dark:text-white" 
+                    />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
@@ -38,7 +60,12 @@ const Settings = () => {
             </div>
             <div className="flex justify-end gap-4 pt-2">
                 <button className="px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg text-sm font-bold transition">Delete Account</button>
-                <button className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-blue-600 transition">Save Changes</button>
+                <button 
+                  onClick={handleSaveChanges}
+                  className="px-6 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-blue-600 transition"
+                >
+                  Save Changes
+                </button>
             </div>
         </div>
 

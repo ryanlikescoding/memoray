@@ -2,18 +2,51 @@ const { useState, useEffect } = React;
 
 const Layout = ({ children, currentScreen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState({ name: 'Alex Johnson', email: 'alex@example.com' });
+  const [user, setUser] = useState(() => ({ 
+    name: localStorage.getItem('userName') || 'User', 
+    email: localStorage.getItem('userEmail') || '' 
+  }));
 
   useEffect(() => {
     // Auth check
     const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (!isAuthenticated) {
-      window.location.href = '/';
+    const token = localStorage.getItem('accessToken');
+
+    if (!isAuthenticated || !token) {
+      window.location.href = '/login.html';
+      return;
     }
+
+    const updateUserData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/api/verify-token?token=${token}`);
+        if (!response.ok) {
+          throw new Error('Invalid token');
+        }
+        const data = await response.json();
+        
+        localStorage.setItem('userName', data.user_name);
+        localStorage.setItem('userEmail', data.user_email);
+        
+        setUser({
+          name: data.user_name,
+          email: data.user_email
+        });
+      } catch (err) {
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('accessToken');
+        window.location.href = '/login.html';
+      }
+    };
+
+    updateUserData();
+    window.addEventListener('storage', updateUserData);
+    return () => window.removeEventListener('storage', updateUserData);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('accessToken');
     window.location.href = '/';
   };
 
