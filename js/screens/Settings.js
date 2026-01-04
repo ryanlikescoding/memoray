@@ -1,11 +1,11 @@
-import React from 'react';
-import { LogOut, Eye, CheckCircle2 } from 'lucide-react';
+const { LogOut, Eye, CheckCircle2 } = lucideReact;
 
-interface SettingsProps {
-    onLogout: () => void;
-}
+const Settings = () => {
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    window.location.href = '/';
+  };
 
-const Settings: React.FC<SettingsProps> = ({ onLogout }) => {
   return (
     <div className="p-4 md:p-8 space-y-8 max-w-4xl mx-auto h-[calc(100vh-64px)] overflow-y-auto">
       <div className="flex justify-between items-center">
@@ -65,59 +65,23 @@ const Settings: React.FC<SettingsProps> = ({ onLogout }) => {
             </div>
         </div>
 
-        {/* AI Preferences */}
+        {/* API Key */}
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 space-y-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">AI Preferences</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-                <div className="space-y-6">
-                    <h3 className="font-medium text-lg text-gray-800 dark:text-gray-200">Timetable Generation</h3>
-                    
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">Enable AI Timetable</span>
-                        <div className="w-11 h-6 bg-primary rounded-full relative cursor-pointer">
-                            <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                         <div className="flex justify-between text-sm">
-                            <span className="text-gray-700 dark:text-gray-300">Study Session Length: <span className="text-primary font-bold">60 min</span></span>
-                         </div>
-                         <input type="range" className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-primary" />
-                    </div>
-                </div>
-
-                <div className="space-y-6">
-                    <h3 className="font-medium text-lg text-gray-800 dark:text-gray-200">Revision List Creation</h3>
-                    
-                    <div className="flex items-center justify-between">
-                        <span className="text-gray-600 dark:text-gray-400">Enable AI Revision Lists</span>
-                        <div className="w-11 h-6 bg-primary rounded-full relative cursor-pointer">
-                            <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
-                        </div>
-                    </div>
-
-                     <div className="space-y-2">
-                        <label className="text-sm text-gray-700 dark:text-gray-300">Prioritization Strategy</label>
-                        <select className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none">
-                            <option>Prioritize Weaker Subjects</option>
-                            <option>Balanced Approach</option>
-                            <option>Exam Date Proximity</option>
-                        </select>
-                    </div>
-                </div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">API Settings</h2>
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Gemini API Key</label>
+                <input 
+                  type="password" 
+                  placeholder="Enter your Google Gemini API Key" 
+                  onChange={(e) => localStorage.setItem('GEMINI_API_KEY', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 dark:text-white" 
+                />
+                <p className="text-xs text-gray-500">Your key is stored locally in your browser.</p>
             </div>
-        </div>
-
-        <div className="pt-4">
-             <button onClick={onLogout} className="flex items-center gap-2 text-red-500 font-medium hover:text-red-600 transition">
-                 <LogOut size={20} /> Log Out
-             </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default Settings;
+window.Settings = Settings;

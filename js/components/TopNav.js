@@ -1,15 +1,6 @@
-import React, { useState } from 'react';
-import { Menu, X, Bell, Search } from 'lucide-react';
-import { Screen } from '../types';
+const { Menu, X, Bell, Search } = lucideReact;
 
-interface TopNavProps {
-  onMenuClick: () => void;
-  isMenuOpen: boolean;
-  user: { name: string; email: string };
-  onNavigate: (screen: Screen) => void;
-}
-
-const TopNav: React.FC<TopNavProps> = ({ onMenuClick, isMenuOpen, user, onNavigate }) => {
+const TopNav = ({ onMenuClick, isMenuOpen, user }) => {
   return (
     <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 sticky top-0 z-20 md:pl-72">
         <div className="flex items-center gap-4 md:hidden">
@@ -35,7 +26,7 @@ const TopNav: React.FC<TopNavProps> = ({ onMenuClick, isMenuOpen, user, onNaviga
                 <Bell size={20} />
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate(Screen.SETTINGS)}>
+            <a href="/settings.html" className="flex items-center gap-3 cursor-pointer">
                 <div className="text-right hidden sm:block">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white leading-none">{user.name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 leading-none mt-1">Student</p>
@@ -45,10 +36,10 @@ const TopNav: React.FC<TopNavProps> = ({ onMenuClick, isMenuOpen, user, onNaviga
                     alt="Profile" 
                     className="w-9 h-9 rounded-full border-2 border-white dark:border-gray-700 shadow-sm" 
                 />
-            </div>
+            </a>
         </div>
     </header>
   );
 };
 
-export default TopNav;
+window.TopNav = TopNav;

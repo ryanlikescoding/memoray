@@ -1,12 +1,6 @@
-import React from 'react';
-import { Plus, List, Zap, Clock, CheckCircle2, AlertTriangle, Lightbulb } from 'lucide-react';
-import { Screen, TimetableEntry } from '../types';
+const { Plus, List, Zap, Clock, CheckCircle2, AlertTriangle, Lightbulb } = lucideReact;
 
-interface DashboardProps {
-  onNavigate: (screen: Screen) => void;
-}
-
-const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
+const Dashboard = () => {
   const schedule = [
     { time: "09:00 - 10:30", subject: "Calculus II", location: "Room 301", status: "Upcoming", color: "blue" },
     { time: "11:00 - 12:30", subject: "Physics I", location: "Lab B", status: "Upcoming", color: "purple" },
@@ -30,24 +24,24 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       </div>
 
       <div className="flex flex-wrap gap-4">
-        <button 
-            onClick={() => onNavigate(Screen.TIMETABLE)}
+        <a 
+            href="/timetable.html"
             className="px-6 py-3 bg-primary hover:bg-blue-600 text-white font-medium rounded-lg transition shadow-sm flex items-center gap-2">
             <Zap size={18} />
             Generate New Timetable
-        </button>
-        <button 
-            onClick={() => onNavigate(Screen.PERFORMANCE)}
+        </a>
+        <a 
+            href="/performance.html"
             className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-2">
             <Plus size={18} />
             Add a New Score
-        </button>
-        <button 
-            onClick={() => onNavigate(Screen.PERFORMANCE)}
+        </a>
+        <a 
+            href="/performance.html"
             className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-2">
             <List size={18} />
             View Full Revision List
-        </button>
+        </a>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -99,42 +93,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                                 <div 
                                     className="w-full bg-primary hover:bg-blue-600 transition-all duration-500 rounded-t-lg relative"
                                     style={{ height: `${score.val}%` }}
-                                >
-                                </div>
+                                ></div>
                             </div>
-                            <div className="text-center">
-                                <span className="block text-xs font-medium text-gray-500 dark:text-gray-400">{score.sub}</span>
-                            </div>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white">{score.sub}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">{score.val}%</span>
                         </div>
                     ))}
-                </div>
-                <div className="mt-4 text-right">
-                    <button onClick={() => onNavigate(Screen.PERFORMANCE)} className="text-primary text-sm font-medium hover:underline">View Details</button>
-                </div>
-            </div>
-
-            {/* Revision Focus */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">Revision Focus</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">12 topics to revise <span className="font-bold text-gray-900 dark:text-white">65% Complete</span></p>
-                
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-6">
-                    <div className="bg-emerald-400 h-2.5 rounded-full" style={{ width: '65%' }}></div>
-                </div>
-
-                <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                        <AlertTriangle className="text-amber-500" size={20} />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">Integration by Parts</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Lightbulb className="text-yellow-500" size={20} />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">Newton's Laws of Motion</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <CheckCircle2 className="text-gray-400" size={20} />
-                        <span className="text-sm font-medium text-gray-500 line-through">Renaissance Art Movements</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -143,4 +107,4 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   );
 };
 
-export default Dashboard;
+window.Dashboard = Dashboard;

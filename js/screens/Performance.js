@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { AlertTriangle, Lightbulb, CheckCircle2, TrendingUp, ChevronDown, BookOpen, Check } from 'lucide-react';
-import { RevisionItem } from '../types';
+const { AlertTriangle, Lightbulb, CheckCircle2, TrendingUp, ChevronDown } = lucideReact;
+const { useState } = React;
 
-const Performance: React.FC = () => {
+const Performance = () => {
   const [activeTab, setActiveTab] = useState('Mathematics');
   const tabs = ['Mathematics', 'Physics', 'Chemistry', 'Biology'];
 
-  const revisionItems: RevisionItem[] = [
+  const revisionItems = [
     { id: '1', topic: 'Algebraic Equations', priority: 'High', status: 'Pending', description: 'Low scores on recent quizzes about this topic.' },
     { id: '2', topic: 'Linear Functions', priority: 'Medium', status: 'Pending', description: 'Inconsistent performance in homework assignments.' },
     { id: '3', topic: 'Polynomials', priority: 'Low', status: 'Pending', description: 'Generally good understanding but a few concepts could be reinforced.' },
@@ -98,28 +97,16 @@ const Performance: React.FC = () => {
                         {item.priority === 'Medium' && <Lightbulb className="text-yellow-500" />}
                         {item.priority === 'Low' && <CheckCircle2 className="text-green-500" />}
                     </div>
-                    
                     <div className="flex-1">
-                         <div className="flex items-center gap-3 mb-1">
-                             <h4 className="font-bold text-gray-900 dark:text-white text-lg">{item.topic}</h4>
-                             <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                                 item.priority === 'High' ? 'bg-orange-100 text-orange-700' : 
-                                 item.priority === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
-                                 'bg-green-100 text-green-700'
-                             }`}>
-                                 {item.priority} Priority
-                             </span>
-                         </div>
-                         <p className="text-gray-500 dark:text-gray-400 text-sm">{item.description}</p>
+                        <h4 className="text-lg font-bold text-gray-900 dark:text-white">{item.topic}</h4>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{item.description}</p>
                     </div>
-
-                    <div className="flex items-center gap-3 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100 dark:border-gray-700">
-                        <button className="flex items-center gap-2 px-4 py-2 text-primary font-medium border border-primary rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition">
-                            <BookOpen size={18} /> View Resources
-                        </button>
-                        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-blue-600 transition">
-                            {item.status === 'Revised' ? <Check size={18} /> : <CheckCircle2 size={18} />}
-                            {item.status === 'Revised' ? 'Revised' : 'Mark as Revised'}
+                    <div className="flex items-center gap-3">
+                        <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium">
+                            {item.status}
+                        </span>
+                        <button className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold hover:bg-blue-600 transition">
+                            Mark Revised
                         </button>
                     </div>
                 </div>
@@ -130,4 +117,4 @@ const Performance: React.FC = () => {
   );
 };
 
-export default Performance;
+window.Performance = Performance;

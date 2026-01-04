@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Memoray - Welcome</title>
+    <title>Memoray - Timetable</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -32,12 +32,18 @@
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white">
     <div id="root"></div>
 
-    <script type="text/babel" src="js/screens/LandingPage.js"></script>
+    <script type="text/babel" src="js/services/gemini.js"></script>
+    <script type="text/babel" src="js/components/Sidebar.js"></script>
+    <script type="text/babel" src="js/components/TopNav.js"></script>
+    <script type="text/babel" src="js/components/Layout.js"></script>
+    <script type="text/babel" src="js/screens/TimetableGenerator.js"></script>
     
     <script type="text/babel">
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(
-            <LandingPage />
+            <Layout currentScreen="TIMETABLE">
+                <TimetableGenerator />
+            </Layout>
         );
     </script>
 </body>

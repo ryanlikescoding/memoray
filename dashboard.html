@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Memoray - Welcome</title>
+    <title>Memoray - Dashboard</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -23,21 +24,31 @@
             },
         }
     </script>
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide React -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/services/lucide-wrapper.js"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white">
     <div id="root"></div>
 
-    <script type="text/babel" src="js/screens/LandingPage.js"></script>
+    <!-- Scripts -->
+    <script type="text/babel" src="js/services/gemini.js"></script>
+    <script type="text/babel" src="js/components/Sidebar.js"></script>
+    <script type="text/babel" src="js/components/TopNav.js"></script>
+    <script type="text/babel" src="js/components/Layout.js"></script>
+    <script type="text/babel" src="js/screens/Dashboard.js"></script>
     
     <script type="text/babel">
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(
-            <LandingPage />
+            <Layout currentScreen="DASHBOARD">
+                <Dashboard />
+            </Layout>
         );
     </script>
 </body>
