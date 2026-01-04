@@ -1,11 +1,11 @@
-const { LayoutDashboard, Calendar, BarChart2, Settings, LogOut, Hexagon } = lucideReact;
+const { LayoutDashboard, Calendar, BarChart2, Settings: SettingsIcon, LogOut, Hexagon } = lucideReact;
 
 const Sidebar = ({ currentScreen, onLogout }) => {
   const navItems = [
     { id: 'DASHBOARD', label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard.html' },
     { id: 'TIMETABLE', label: 'Timetable', icon: Calendar, href: '/timetable.html' },
     { id: 'PERFORMANCE', label: 'Performance', icon: BarChart2, href: '/performance.html' },
-    { id: 'SETTINGS', label: 'Settings', icon: Settings, href: '/settings.html' },
+    { id: 'SETTINGS', label: 'Settings', icon: SettingsIcon, href: '/settings.html' },
   ];
 
   // Helper for conditional classes
@@ -17,7 +17,7 @@ const Sidebar = ({ currentScreen, onLogout }) => {
   };
 
   return (
-    <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col h-screen fixed left-0 top-0 z-10 hidden md:flex">
+    <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col h-full">
       <div className="p-6 flex items-center gap-3">
         <Hexagon className="text-primary fill-current" size={28} />
         <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Memoray</span>
