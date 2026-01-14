@@ -1,0 +1,14 @@
+{
+  "name": "Biology",
+  "stats": { "average": 88, "highest": 99, "lowest": 75 },
+  "scoresOverTime": [
+    { "label": "Quiz 1", "score": 85 },
+    { "label": "Test 1", "score": 88 },
+    { "label": "Quiz 2", "score": 92 },
+    { "label": "Midterm", "score": 95 },
+    { "label": "Quiz 3", "score": 90 }
+  ],
+  "revisionList": [
+    { "id": "b1", "topic": "Genetics", "priority": "Medium", "status": "Pending", "description": "Review Mendelian inheritance laws." }
+  ]
+}

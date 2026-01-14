@@ -1,0 +1,15 @@
+{
+  "name": "Physics",
+  "stats": { "average": 78, "highest": 92, "lowest": 65 },
+  "scoresOverTime": [
+    { "label": "Quiz 1", "score": 65 },
+    { "label": "Test 1", "score": 70 },
+    { "label": "Quiz 2", "score": 85 },
+    { "label": "Midterm", "score": 80 },
+    { "label": "Quiz 3", "score": 88 }
+  ],
+  "revisionList": [
+    { "id": "p1", "topic": "Thermodynamics", "priority": "High", "status": "Pending", "description": "Entropy and the second law need more study." },
+    { "id": "p2", "topic": "Electromagnetism", "priority": "Medium", "status": "Pending", "description": "Practice more problems on Maxwell's equations." }
+  ]
+}

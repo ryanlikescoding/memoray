@@ -1,0 +1,14 @@
+{
+  "name": "Chemistry",
+  "stats": { "average": 82, "highest": 95, "lowest": 70 },
+  "scoresOverTime": [
+    { "label": "Quiz 1", "score": 70 },
+    { "label": "Test 1", "score": 75 },
+    { "label": "Quiz 2", "score": 80 },
+    { "label": "Midterm", "score": 85 },
+    { "label": "Quiz 3", "score": 82 }
+  ],
+  "revisionList": [
+    { "id": "c1", "topic": "Organic Synthesis", "priority": "High", "status": "Pending", "description": "Review reaction mechanisms for alkanes." }
+  ]
+}

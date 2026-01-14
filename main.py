@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
-from typing import Optional
+from typing import Optional, List
 import uvicorn
 import jwt
 import datetime
@@ -9,6 +9,8 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import secrets
+import json
+import os
 
 app = FastAPI()
 
@@ -37,6 +39,8 @@ ALGORITHM = "HS256"
 users_db = {}
 # Reset tokens store: {token: {"email": email, "exp": expiration_time}}
 reset_tokens = {}
+
+BASE_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -184,6 +188,34 @@ async def verify_token(token: str):
         return {"status": "ok", "user_name": user["name"], "user_email": user["email"]}
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+@app.get("/api/timetable")
+async def get_timetable():
+    file_path = os.path.join(BASE_DATA_DIR, "ryanshi", "timetable", "timetable.json")
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail=f"Timetable data not found at {file_path}")
+    with open(file_path, "r") as f:
+        data = json.load(f)
+    return data
+
+@app.get("/api/performance")
+async def get_performance():
+    base_path = os.path.join(BASE_DATA_DIR, "ryanshi")
+    subjects = []
+    
+    if not os.path.exists(base_path):
+        raise HTTPException(status_code=404, detail=f"Data directory not found at {base_path}")
+        
+    for item in os.listdir(base_path):
+        item_path = os.path.join(base_path, item)
+        if os.path.isdir(item_path) and item != "timetable":
+            perf_file = os.path.join(item_path, "performance.json")
+            if os.path.exists(perf_file):
+                with open(perf_file, "r") as f:
+                    subject_data = json.load(f)
+                    subjects.append(subject_data)
+                    
+    return {"subjects": subjects}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

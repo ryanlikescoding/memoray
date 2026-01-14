@@ -1,0 +1,14 @@
+{
+  "name": "English",
+  "stats": { "average": 90, "highest": 100, "lowest": 80 },
+  "scoresOverTime": [
+    { "label": "Essay 1", "score": 85 },
+    { "label": "Poetry Quiz", "score": 92 },
+    { "label": "Drama Test", "score": 88 },
+    { "label": "Final Essay", "score": 95 }
+  ],
+  "revisionList": [
+    { "id": "e1", "topic": "Shakespearean Sonnets", "priority": "Medium", "status": "Pending", "description": "Review iambic pentameter and rhyme schemes." },
+    { "id": "e2", "topic": "Modernist Literature", "priority": "High", "status": "In Progress", "description": "Deep dive into 'The Waste Land' themes." }
+  ]
+}

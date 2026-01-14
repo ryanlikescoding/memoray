@@ -1,0 +1,16 @@
+{
+  "name": "Mathematics",
+  "stats": { "average": 85, "highest": 98, "lowest": 72 },
+  "scoresOverTime": [
+    { "label": "Quiz 1", "score": 75 },
+    { "label": "Test 1", "score": 82 },
+    { "label": "Quiz 2", "score": 88 },
+    { "label": "Midterm", "score": 92 },
+    { "label": "Quiz 3", "score": 90 }
+  ],
+  "revisionList": [
+    { "id": "m1", "topic": "Integrals", "priority": "High", "status": "Pending", "description": "Struggled with integration by parts in the midterm." },
+    { "id": "m2", "topic": "Vector Spaces", "priority": "Medium", "status": "In Progress", "description": "Need to review basis and dimension concepts." },
+    { "id": "m3", "topic": "Probability", "priority": "Low", "status": "Pending", "description": "Review Bayes' theorem before the final." }
+  ]
+}

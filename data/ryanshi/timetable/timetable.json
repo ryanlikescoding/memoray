@@ -1,0 +1,25 @@
+{
+  "courses": [
+    { "id": "1", "name": "Advanced Mathematics", "details": "Calculus, Linear Algebra, Statistics" },
+    { "id": "2", "name": "Modern Physics", "details": "Quantum Mechanics, Relativity" },
+    { "id": "3", "name": "Organic Chemistry", "details": "Structure, Properties, Reactions" },
+    { "id": "4", "name": "Computer Science", "details": "Data Structures, Algorithms" }
+  ],
+  "commitments": [
+    { "id": "c1", "name": "Part-time Job", "time": "Mon, Wed 17:00-21:00" },
+    { "id": "c2", "name": "Gym", "time": "Daily 07:00-08:30" }
+  ],
+  "timetable": [
+    { "day": "Monday", "time": "09:00", "activity": "Mathematics Lecture", "type": "academic" },
+    { "day": "Monday", "time": "11:00", "activity": "Physics Lab", "type": "academic" },
+    { "day": "Monday", "time": "13:00", "activity": "Lunch Break", "type": "personal" },
+    { "day": "Tuesday", "time": "10:00", "activity": "Chemistry Seminar", "type": "academic" },
+    { "day": "Tuesday", "time": "14:00", "activity": "Computer Science", "type": "academic" },
+    { "day": "Wednesday", "time": "09:00", "activity": "Math Tutorial", "type": "academic" },
+    { "day": "Wednesday", "time": "15:00", "activity": "Study Group", "type": "personal" },
+    { "day": "Thursday", "time": "11:00", "activity": "Physics Lecture", "type": "academic" },
+    { "day": "Thursday", "time": "13:00", "activity": "Library Session", "type": "personal" },
+    { "day": "Friday", "time": "10:00", "activity": "CS Project", "type": "academic" },
+    { "day": "Friday", "time": "14:00", "activity": "Weekly Review", "type": "personal" }
+  ]
+}

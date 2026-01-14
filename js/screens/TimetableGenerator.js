@@ -1,20 +1,45 @@
 const { Trash2, Plus, Book, Briefcase, Sun, Moon, Sparkles, LayoutGrid, Settings, ChevronLeft, ChevronRight, Menu } = lucideReact;
-const { useState, useMemo } = React;
+const { useState, useMemo, useEffect } = React;
 
 const TimetableGenerator = () => {
-  const [courses, setCourses] = useState([
-    { id: '1', name: 'Calculus I', details: 'Professor Smith, Room 101' },
-    { id: '2', name: 'History of Art', details: 'Professor Davis, Room 203' },
-  ]);
-  const [commitments, setCommitments] = useState([
-    { id: '1', name: 'Part-time Job', time: 'Wed, 5:00 PM - 9:00 PM' }
-  ]);
+  const [courses, setCourses] = useState([]);
+  const [commitments, setCommitments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [generatedTimetable, setGeneratedTimetable] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/timetable')
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        setCourses(data.courses || []);
+        setCommitments(data.commitments || []);
+        setGeneratedTimetable(data.timetable || null);
+        setInitialLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching timetable data:', err);
+        setCourses([]);
+        setCommitments([]);
+        setGeneratedTimetable(null);
+        setInitialLoading(false);
+      });
+  }, []);
 
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const hours = Array.from({ length: 15 }, (_, i) => i + 7); // 7 AM to 9 PM
+
+  if (initialLoading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-64px)] bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   const handleGenerate = async () => {
     setLoading(true);

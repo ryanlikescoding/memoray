@@ -1,15 +1,55 @@
 const { AlertTriangle, Lightbulb, CheckCircle2, TrendingUp, ChevronDown } = lucideReact;
-const { useState } = React;
+const { useState, useEffect } = React;
 
 const Performance = () => {
   const [activeTab, setActiveTab] = useState('Mathematics');
-  const tabs = ['Mathematics', 'Physics', 'Chemistry', 'Biology'];
+  const [performanceData, setPerformanceData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const revisionItems = [
-    { id: '1', topic: 'Algebraic Equations', priority: 'High', status: 'Pending', description: 'Low scores on recent quizzes about this topic.' },
-    { id: '2', topic: 'Linear Functions', priority: 'Medium', status: 'Pending', description: 'Inconsistent performance in homework assignments.' },
-    { id: '3', topic: 'Polynomials', priority: 'Low', status: 'Pending', description: 'Generally good understanding but a few concepts could be reinforced.' },
-  ];
+  useEffect(() => {
+    fetch('http://localhost:8000/api/performance')
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (data && Array.isArray(data.subjects)) {
+          setPerformanceData(data);
+        } else {
+          console.error('Invalid data format received:', data);
+          setPerformanceData({ subjects: [] });
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching performance data:', err);
+        setPerformanceData({ subjects: [] });
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-64px)]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!performanceData || !Array.isArray(performanceData.subjects) || performanceData.subjects.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-64px)] flex-col gap-4">
+        <div className="p-8 bg-gray-50 dark:bg-gray-800 rounded-2xl text-center max-w-md">
+          <AlertTriangle size={48} className="text-amber-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No Performance Data</h2>
+          <p className="text-gray-500 dark:text-gray-400">We couldn't find any performance data for your subjects. Please check your data folders.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const currentSubject = performanceData.subjects.find(s => s.name === activeTab) || performanceData.subjects[0];
+  const tabs = performanceData.subjects.map(s => s.name);
 
   return (
     <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto h-[calc(100vh-64px)] overflow-y-auto">
@@ -38,15 +78,15 @@ const Performance = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
             <h3 className="text-gray-500 dark:text-gray-400 font-medium mb-2">Overall Average</h3>
-            <p className="text-4xl font-bold text-gray-900 dark:text-white">82%</p>
+            <p className="text-4xl font-bold text-gray-900 dark:text-white">{currentSubject.stats.average}%</p>
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
             <h3 className="text-gray-500 dark:text-gray-400 font-medium mb-2">Highest Score</h3>
-            <p className="text-4xl font-bold text-gray-900 dark:text-white">95%</p>
+            <p className="text-4xl font-bold text-gray-900 dark:text-white">{currentSubject.stats.highest}%</p>
         </div>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
             <h3 className="text-gray-500 dark:text-gray-400 font-medium mb-2">Lowest Score</h3>
-            <p className="text-4xl font-bold text-gray-900 dark:text-white">65%</p>
+            <p className="text-4xl font-bold text-gray-900 dark:text-white">{currentSubject.stats.lowest}%</p>
         </div>
       </div>
 
@@ -62,15 +102,12 @@ const Performance = () => {
         </div>
         
         <div className="h-64 flex items-end justify-between gap-4 px-2">
-            {[
-                { label: 'Quiz 1', h: '40%', col: 'bg-blue-200 dark:bg-blue-900/40' },
-                { label: 'Test 1', h: '35%', col: 'bg-blue-200 dark:bg-blue-900/40' },
-                { label: 'Quiz 2', h: '45%', col: 'bg-blue-200 dark:bg-blue-900/40' },
-                { label: 'Midterm', h: '75%', col: 'bg-primary' },
-                { label: 'Quiz 3', h: '50%', col: 'bg-blue-200 dark:bg-blue-900/40' },
-            ].map((bar, i) => (
+            {currentSubject.scoresOverTime.map((bar, i) => (
                 <div key={i} className="flex flex-col items-center gap-3 flex-1 h-full justify-end group">
-                    <div className={`w-full rounded-t-md transition-all duration-500 hover:opacity-80 ${bar.col}`} style={{ height: bar.h }}></div>
+                    <div 
+                      className={`w-full rounded-t-md transition-all duration-500 hover:opacity-80 ${bar.score > 80 ? 'bg-primary' : 'bg-blue-200 dark:bg-blue-900/40'}`} 
+                      style={{ height: `${bar.score}%` }}
+                    ></div>
                     <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{bar.label}</span>
                 </div>
             ))}
@@ -90,7 +127,7 @@ const Performance = () => {
         </div>
 
         <div className="space-y-4">
-            {revisionItems.map(item => (
+            {currentSubject.revisionList.map(item => (
                 <div key={item.id} className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row md:items-center gap-5">
                     <div className="min-w-[40px]">
                         {item.priority === 'High' && <AlertTriangle className="text-orange-500" />}
