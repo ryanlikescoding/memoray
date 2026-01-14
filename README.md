@@ -38,14 +38,20 @@ Open your terminal in the project root and run:
 pip install fastapi uvicorn pyjwt pydantic[email]
 ```
 
-### 3. Run the Backend Server
+### 3. Configure Email (for Password Reset)
+The password reset feature requires SMTP credentials. In [main.py](main.py), update the following variables:
+- `SMTP_USERNAME`: Your email address (e.g., Gmail).
+- `SMTP_PASSWORD`: Your email app password (for Gmail, use an [App Password](https://support.google.com/accounts/answer/185833)).
+- `FROM_EMAIL`: The email address that will appear in the "From" field.
+
+### 4. Run the Backend Server
 Start the FastAPI server:
 ```bash
 python main.py
 ```
 The backend will be available at `http://localhost:8000`.
 
-### 4. Launch the Frontend
+### 5. Launch the Frontend
 Since this is a vanilla HTML/JS project, you can simply open `index.html` in your browser. For the best experience (including proper routing and icon loading), it is recommended to use a simple local server:
 - **VS Code**: Use the "Live Server" extension.
 - **Python**: Run `python -m http.server 8080` and visit `http://localhost:8080`.
@@ -53,11 +59,13 @@ Since this is a vanilla HTML/JS project, you can simply open `index.html` in you
 ## 📁 Project Structure
 
 - `index.html`: Landing page and entry point.
-- `login.html` / `register.html`: Authentication pages.
-- `dashboard.html`: Main user overview.
-- `timetable.html`: AI Timetable generator.
-- `performance.html`: Progress tracking and revision list.
-- `settings.html`: User profile and account management.
+- `pages/`: Directory containing all internal HTML pages.
+  - `login.html` / `register.html`: Authentication pages.
+  - `dashboard.html`: Main user overview.
+  - `timetable.html`: AI Timetable generator.
+  - `performance.html`: Progress tracking and revision list.
+  - `settings.html`: User profile and account management.
+  - `forgot-password.html` / `reset-password.html`: Password recovery flow.
 - `js/components/`: Reusable UI components (Layout, Sidebar, TopNav).
 - `js/screens/`: Page-specific React components.
 - `js/services/`: API services and utility wrappers (Gemini, Lucide).

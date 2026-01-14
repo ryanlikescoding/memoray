@@ -2,10 +2,10 @@ const { LayoutDashboard, Calendar, BarChart2, Settings: SettingsIcon, LogOut, He
 
 const Sidebar = ({ currentScreen, onLogout }) => {
   const navItems = [
-    { id: 'DASHBOARD', label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard.html' },
-    { id: 'TIMETABLE', label: 'Timetable', icon: Calendar, href: '/timetable.html' },
-    { id: 'PERFORMANCE', label: 'Performance', icon: BarChart2, href: '/performance.html' },
-    { id: 'SETTINGS', label: 'Settings', icon: SettingsIcon, href: '/settings.html' },
+    { id: 'DASHBOARD', label: 'Dashboard', icon: LayoutDashboard, href: '/pages/dashboard.html' },
+    { id: 'TIMETABLE', label: 'Timetable', icon: Calendar, href: '/pages/timetable.html' },
+    { id: 'PERFORMANCE', label: 'Performance', icon: BarChart2, href: '/pages/performance.html' },
+    { id: 'SETTINGS', label: 'Settings', icon: SettingsIcon, href: '/pages/settings.html' },
   ];
 
   // Helper for conditional classes

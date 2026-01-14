@@ -6,20 +6,61 @@ const Auth = ({ mode = 'login' }) => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setSuccess('');
     
+    if (mode === 'forgot-password') {
+      try {
+        const response = await fetch(`http://localhost:8000/api/forgot-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'Failed to send reset email');
+        setSuccess(data.message);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    if (mode === 'reset-password') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      try {
+        const response = await fetch(`http://localhost:8000/api/reset-password`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, new_password: password }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'Failed to reset password');
+        setSuccess(data.message);
+        setTimeout(() => window.location.href = '/pages/login.html', 2000);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
     const endpoint = mode === 'register' ? '/api/register' : '/api/login';
     const payload = mode === 'register' 
       ? { email, password, name }
       : { email, password };
 
     try {
+      console.log('Attempting to fetch:', `http://localhost:8000${endpoint}`);
       const response = await fetch(`http://localhost:8000${endpoint}`, {
         method: 'POST',
         headers: {
@@ -40,11 +81,34 @@ const Auth = ({ mode = 'login' }) => {
       localStorage.setItem('userEmail', data.user_email);
       localStorage.setItem('userName', data.user_name);
 
-      window.location.href = '/dashboard.html';
+      window.location.href = '/pages/dashboard.html';
     } catch (err) {
-      setError(err.message);
+      console.error('Fetch error:', err);
+      setError(err.message === 'Failed to fetch' 
+        ? 'Cannot connect to the backend server. Please ensure main.py is running on port 8000.' 
+        : err.message);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const toggleMode = () => {
+    if (mode === 'login') window.location.href = '/pages/register.html';
+    else window.location.href = '/pages/login.html';
+  };
+
+  const goToForgotPassword = (e) => {
+    e.preventDefault();
+    window.location.href = '/pages/forgot-password.html';
+  };
+
+  const getTitle = () => {
+    switch (mode) {
+      case 'login': return 'Welcome Back';
+      case 'register': return 'Create Account';
+      case 'forgot-password': return 'Forgot Password';
+      case 'reset-password': return 'Reset Password';
+      default: return '';
     }
   };
 
@@ -56,23 +120,28 @@ const Auth = ({ mode = 'login' }) => {
             <Hexagon className="text-primary fill-current" size={48} />
           </div>
           <h2 className="mt-6 text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+            {getTitle()}
           </h2>
           {error && (
             <div className="mt-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium">
               {error}
             </div>
           )}
+          {success && (
+            <div className="mt-4 p-3 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-600 dark:text-green-400 text-sm font-medium">
+              {success}
+            </div>
+          )}
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {mode === 'login' 
-              ? "Don't have an account? " 
-              : "Already have an account? "}
-            <a 
-              href={mode === 'login' ? '/register.html' : '/login.html'} 
-              className="font-bold text-primary hover:underline"
-            >
-              {mode === 'login' ? 'Sign up' : 'Log in'}
-            </a>
+            {mode === 'login' && (
+              <>Don't have an account? <a href="/pages/register.html" className="font-bold text-primary hover:underline">Sign up</a></>
+            )}
+            {mode === 'register' && (
+              <>Already have an account? <a href="/pages/login.html" className="font-bold text-primary hover:underline">Log in</a></>
+            )}
+            {(mode === 'forgot-password' || mode === 'reset-password') && (
+              <a href="/pages/login.html" className="font-bold text-primary hover:underline">Back to login</a>
+            )}
           </p>
         </div>
 
@@ -94,34 +163,48 @@ const Auth = ({ mode = 'login' }) => {
               </div>
             )}
             
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="text-gray-400" size={18} />
+            {mode !== 'reset-password' && (
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="text-gray-400" size={18} />
+                </div>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
+                  placeholder="Email Address"
+                />
               </div>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
-                placeholder="Email Address"
-              />
-            </div>
+            )}
 
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="text-gray-400" size={18} />
+            {mode !== 'forgot-password' && (
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="text-gray-400" size={18} />
+                </div>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
+                  placeholder={mode === 'reset-password' ? "New Password" : "Password"}
+                />
               </div>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
-                placeholder="Password"
-              />
-            </div>
+            )}
           </div>
+
+          {mode === 'login' && (
+            <div className="flex items-center justify-end">
+              <div className="text-sm">
+                <a href="/pages/forgot-password.html" className="font-bold text-primary hover:underline">
+                  Forgot your password?
+                </a>
+              </div>
+            </div>
+          )}
 
           <div>
             <button
@@ -133,7 +216,10 @@ const Auth = ({ mode = 'login' }) => {
                 <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <>
-                  {mode === 'login' ? 'Sign In' : 'Create Account'}
+                  {mode === 'login' && 'Sign In'}
+                  {mode === 'register' && 'Create Account'}
+                  {mode === 'forgot-password' && 'Send Reset Link'}
+                  {mode === 'reset-password' && 'Update Password'}
                   <ArrowRight className="ml-2" size={18} />
                 </>
               )}

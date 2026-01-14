@@ -26,7 +26,7 @@ const TopNav = ({ onMenuClick, isMenuOpen, user }) => {
                 <Bell size={20} />
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <a href="/settings.html" className="flex items-center gap-3 cursor-pointer">
+            <a href="/pages/settings.html" className="flex items-center gap-3 cursor-pointer">
                 <div className="text-right hidden sm:block">
                     <p className="text-sm font-semibold text-gray-900 dark:text-white leading-none">{user.name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 leading-none mt-1">Student</p>

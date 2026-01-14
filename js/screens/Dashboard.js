@@ -45,19 +45,19 @@ const Dashboard = () => {
 
       <div className="flex flex-wrap gap-4">
         <a 
-            href="/timetable.html"
+            href="/pages/timetable.html"
             className="px-6 py-3 bg-primary hover:bg-blue-600 text-white font-medium rounded-lg transition shadow-sm flex items-center gap-2">
             <Zap size={18} />
             Generate New Timetable
         </a>
         <a 
-            href="/performance.html"
+            href="/pages/performance.html"
             className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-2">
             <Plus size={18} />
             Add a New Score
         </a>
         <a 
-            href="/performance.html"
+            href="/pages/performance.html"
             className="px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition flex items-center gap-2">
             <List size={18} />
             View Full Revision List

@@ -3,7 +3,7 @@ const { Hexagon, Calendar, BarChart2, CheckSquare, Menu } = lucideReact;
 const LandingPage = () => {
   const handleLogin = () => {
       localStorage.setItem('isAuthenticated', 'true');
-      window.location.href = '/dashboard.html';
+      window.location.href = '/pages/dashboard.html';
   };
 
   return (
@@ -27,11 +27,11 @@ const LandingPage = () => {
                 </div>
                 <div className="flex gap-2">
                   <a 
-                    href="/login.html"
+                    href="/pages/login.html"
                     className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                     <span className="truncate">Log In</span>
                   </a>
-                  <a href="/register.html" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
+                  <a href="/pages/register.html" className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
                     <span className="truncate">Sign Up</span>
                   </a>
                 </div>
@@ -55,7 +55,7 @@ const LandingPage = () => {
                         Effortlessly create smart timetables, track your progress, and conquer your exams with personalized revision lists. Memoray organizes your studies, so you can focus on learning.
                       </h2>
                     </div>
-                    <a href="/register.html" className="flex w-full sm:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
+                    <a href="/pages/register.html" className="flex w-full sm:w-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
                       <span className="truncate">Get Started for Free</span>
                     </a>
                   </div>

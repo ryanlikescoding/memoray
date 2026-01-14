@@ -5,6 +5,10 @@ from typing import Optional
 import uvicorn
 import jwt
 import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import secrets
 
 app = FastAPI()
 
@@ -17,12 +21,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Email Configuration (using environment variables in production is recommended)
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SMTP_USERNAME = "your-email@gmail.com"
+SMTP_PASSWORD = "your-app-password" # Use App Password for Gmail
+FROM_EMAIL = "your-email@gmail.com"
+FRONTEND_URL = "http://localhost:8080" # Change this to your frontend URL
+
 # Secret key for JWT
 SECRET_KEY = "your-secret-key-change-this-in-production"
 ALGORITHM = "HS256"
 
 # In-memory user store (replace with a database in production)
 users_db = {}
+# Reset tokens store: {token: {"email": email, "exp": expiration_time}}
+reset_tokens = {}
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -33,6 +47,13 @@ class UserCreate(UserBase):
 
 class UserLogin(UserBase):
     password: str
+
+class ForgotPassword(BaseModel):
+    email: EmailStr
+
+class ResetPassword(BaseModel):
+    token: str
+    new_password: str
 
 class Token(BaseModel):
     access_token: str
@@ -47,12 +68,43 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+def send_reset_email(email: str, token: str):
+    reset_link = f"{FRONTEND_URL}/pages/reset-password.html?token={token}"
+    
+    msg = MIMEMultipart()
+    msg['From'] = FROM_EMAIL
+    msg['To'] = email
+    msg['Subject'] = "Reset Your Memoray Password"
+    
+    body = f"""
+    Hi,
+    
+    You requested to reset your password for Memoray.
+    Please click the link below to set a new password:
+    
+    {reset_link}
+    
+    If you did not request this, please ignore this email.
+    The link will expire in 1 hour.
+    """
+    
+    msg.attach(MIMEText(body, 'plain'))
+    
+    try:
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.starttls()
+        server.login(SMTP_USERNAME, SMTP_PASSWORD)
+        server.send_message(msg)
+        server.quit()
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        pass
+
 @app.post("/api/register", response_model=Token)
 async def register(user: UserCreate):
     if user.email in users_db:
         raise HTTPException(status_code=400, detail="Email already registered")
     
-    # Store user (in production, hash the password!)
     users_db[user.email] = {
         "email": user.email,
         "password": user.password,
@@ -84,6 +136,38 @@ async def login(user: UserLogin):
         "user_name": db_user["name"],
         "user_email": db_user["email"]
     }
+
+@app.post("/api/forgot-password")
+async def forgot_password(request: ForgotPassword):
+    if request.email not in users_db:
+        return {"message": "If this email is registered, a reset link has been sent."}
+    
+    token = secrets.token_urlsafe(32)
+    expiration = datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+    reset_tokens[token] = {"email": request.email, "exp": expiration}
+    
+    send_reset_email(request.email, token)
+    
+    return {"message": "If this email is registered, a reset link has been sent."}
+
+@app.post("/api/reset-password")
+async def reset_password(request: ResetPassword):
+    token_data = reset_tokens.get(request.token)
+    
+    if not token_data:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+    
+    if datetime.datetime.utcnow() > token_data["exp"]:
+        del reset_tokens[request.token]
+        raise HTTPException(status_code=400, detail="Reset token has expired")
+    
+    email = token_data["email"]
+    if email in users_db:
+        users_db[email]["password"] = request.new_password
+        
+    del reset_tokens[request.token]
+    
+    return {"message": "Password successfully reset"}
 
 @app.get("/api/verify-token")
 async def verify_token(token: str):

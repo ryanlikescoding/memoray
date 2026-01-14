@@ -13,7 +13,7 @@ const Layout = ({ children, currentScreen }) => {
     const token = localStorage.getItem('accessToken');
 
     if (!isAuthenticated || !token) {
-      window.location.href = '/login.html';
+      window.location.href = '/pages/login.html';
       return;
     }
 
@@ -33,9 +33,13 @@ const Layout = ({ children, currentScreen }) => {
           email: data.user_email
         });
       } catch (err) {
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('accessToken');
-        window.location.href = '/login.html';
+        console.error('Session verification failed:', err);
+        // Only redirect if it's an auth error, not a network error
+        if (err.message !== 'Failed to fetch') {
+          localStorage.removeItem('isAuthenticated');
+          localStorage.removeItem('accessToken');
+          window.location.href = '/pages/login.html';
+        }
       }
     };
 
