@@ -1,0 +1,117 @@
+body {
+  width: 350px;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9fafb;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 450px;
+}
+
+header {
+  padding: 16px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  font-size: 18px;
+  margin: 0;
+  color: #111827;
+}
+
+main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+#status {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+#link-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#link-list li {
+  background: white;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+}
+
+#link-list li:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#link-list label {
+  display: flex;
+  padding: 12px;
+  cursor: pointer;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2937;
+  word-break: break-all;
+}
+
+.file-url {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+footer {
+  padding: 16px;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+}
+
+button.primary {
+  width: 100%;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+}
+
+button.primary:hover {
+  background-color: #1d4ed8;
+}
+
+button#refresh {
+  padding: 4px 8px;
+  font-size: 12px;
+}
