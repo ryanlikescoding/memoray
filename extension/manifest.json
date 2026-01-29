@@ -9,6 +9,9 @@
     "downloads",
     "scripting"
   ],
+  "host_permissions": [
+    "https://canvas.inspirededucationschools.com/*"
+  ],
   "action": {
     "default_popup": "html/popup.html"
   },
