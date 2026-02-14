@@ -1,90 +1,63 @@
-// Content script to grab links from the current page
+const FILE_EXTENSIONS = [
+  '.ppt', '.pptx', '.pdf', '.doc', '.docx', '.xls', '.xlsx', 
+  '.zip', '.txt', '.png', '.jpg', '.jpeg', '.mp4', '.mov', '.key'
+];
+
 function grabLinks() {
   console.log('Memoray Grabber: Scanning frame for files...');
+  const files = [];
+  const baseUrl = window.location.origin;
+
+  // 1. Check all <a> tags
   const links = Array.from(document.querySelectorAll('a'));
-  const fileExtensions = [
-    '.ppt', '.pptx', '.pdf', '.doc', '.docx', '.xls', '.xlsx', 
-    '.zip', '.txt', '.png', '.jpg', '.jpeg', '.mp4', '.mov', '.key'
-  ];
-  
-  const grabbedLinks = links
-    .map(link => {
-      const url = link.href;
-      const text = link.innerText.trim() || link.getAttribute('title') || 'Untitled';
-      const downloadAttr = link.getAttribute('download');
-      const className = link.className || '';
-      
-      return {
-        text: text,
-        url: url,
-        downloadAttr: downloadAttr,
-        className: className
-      };
-    })
-    .filter(link => {
-      if (!link.url || link.url.startsWith('javascript:') || link.url.startsWith('mailto:')) return false;
+  links.forEach(link => {
+    const url = link.href;
+    if (!url || url.startsWith('javascript:') || url.startsWith('mailto:')) return;
 
-      try {
-        const urlObj = new URL(link.url);
-        const path = urlObj.pathname.toLowerCase();
-        const search = urlObj.search.toLowerCase();
-        const text = link.text.toLowerCase();
-        const className = link.className.toLowerCase();
+    try {
+      const urlObj = new URL(url, baseUrl);
+      const path = urlObj.pathname.toLowerCase();
+      const search = urlObj.search.toLowerCase();
+      const text = (link.innerText || link.getAttribute('title') || 'Untitled').trim();
+      const className = (link.className || '').toLowerCase();
 
-        // Check if path ends with extension
-        const hasExtInPath = fileExtensions.some(ext => path.endsWith(ext));
-        
-        // Check if query params contain extension (common in Canvas/redirects)
-        const hasExtInQuery = fileExtensions.some(ext => search.includes(ext));
-        
-        // Check if link text contains extension
-        const hasExtInText = fileExtensions.some(ext => text.includes(ext));
+      const hasExt = FILE_EXTENSIONS.some(ext => path.endsWith(ext) || search.includes(ext) || text.toLowerCase().includes(ext));
+      const isDownload = path.includes('/download') || path.includes('/files/') || search.includes('download=') || 
+                         search.includes('wrap=1') || className.includes('file_link') || className.includes('download') || 
+                         className.includes('attachment') || !!link.getAttribute('download');
 
-        // Check for common download keywords in Canvas/LMS
-        const isDownloadLink = 
-          path.includes('/download') || 
-          path.includes('/files/') ||
-          search.includes('download=') || 
-          search.includes('wrap=1') ||
-          className.includes('file_link') ||
-          className.includes('download');
-
-        return hasExtInPath || hasExtInQuery || hasExtInText || isDownloadLink || !!link.downloadAttr;
-      } catch (e) {
-        return false;
-      }
-    })
-    .map(link => {
-      // Clean up filename
-      let filename = 'file';
-      try {
-        const urlObj = new URL(link.url);
-        const pathParts = urlObj.pathname.split('/');
-        filename = pathParts.pop() || 'file';
-        
-        // If filename is just a number (common in Canvas), try to get it from text
-        if (/^\d+$/.test(filename) || filename === 'download') {
-          if (link.text.includes('.')) {
-            filename = link.text;
-          }
+      if (hasExt || isDownload) {
+        let filename = path.split('/').pop() || 'file';
+        if (filename.includes('?')) filename = filename.split('?')[0];
+        if ((/^\d+$/.test(filename) || filename === 'download') && text.includes('.')) {
+          filename = text;
         }
-
-        // Ensure filename has an extension if possible
-        if (!filename.includes('.') && link.text.includes('.')) {
-          const match = link.text.match(/\.[0-9a-z]+$/i);
+        if (!filename.includes('.') && text.includes('.')) {
+          const match = text.match(/\.[0-9a-z]+$/i);
           if (match) filename += match[0];
         }
+        files.push({ text, url, filename });
+      }
+    } catch (e) {}
+  });
+
+  // 2. Check iframes/embeds
+  document.querySelectorAll('iframe, embed, object').forEach(el => {
+    const src = el.src || el.data;
+    if (src && FILE_EXTENSIONS.some(ext => src.toLowerCase().includes(ext))) {
+      try {
+        const urlObj = new URL(src, baseUrl);
+        files.push({
+          text: `Embedded File (${urlObj.pathname.split('/').pop()})`,
+          url: src,
+          filename: urlObj.pathname.split('/').pop()
+        });
       } catch (e) {}
+    }
+  });
 
-      return {
-        text: link.text,
-        url: link.url,
-        filename: filename
-      };
-    });
-
-  console.log(`Memoray Grabber: Found ${grabbedLinks.length} potential files in this frame.`);
-  return grabbedLinks;
+  console.log(`Memoray Grabber: Found ${files.length} potential files.`);
+  return files;
 }
 
 // Listen for messages from the popup

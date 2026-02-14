@@ -1,9 +1,10 @@
 // Background script to handle downloads
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "downloadFile") {
+    const folder = request.folder ? request.folder.replace(/[\\/:*?"<>|]/g, '_') : 'General';
     chrome.downloads.download({
       url: request.url,
-      filename: `Memoray/${request.filename}`,
+      filename: `Memoray/${folder}/${request.filename}`,
       conflictAction: 'uniquify'
     }, (downloadId) => {
       if (chrome.runtime.lastError) {
